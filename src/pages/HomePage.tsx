@@ -6,10 +6,14 @@ import { TbDownload } from "react-icons/tb";
 import { homePageTableType } from "../types/tableType";
 import { useNavigate } from "react-router";
 import Header from "../components/Header";
-import { getTruplan } from "../redux/api/getPatientDetail";
+import { getPatientDicom, getTruplan } from "../redux/api/getPatientDetail";
+import Loader from "../components/Loader";
+import { FaImage } from "react-icons/fa";
+import { RiImageAddLine } from "react-icons/ri";
 
 const HomePage: React.FC = () => {
   const navigation = useNavigate();
+  const [Loading, setLoading] = useState<boolean>(false);
   const [tableData, setTableData] = useState<homePageTableType[]>([
     {
       column1: "test",
@@ -25,34 +29,57 @@ const HomePage: React.FC = () => {
     },
   ]);
 
-  const DownloadPdf = useCallback(async () => {
+  const DicomImageViewer = useCallback(
+    async (id: string) => {
+      localStorage.setItem("CaseId", id);
+      navigation("/dicom");
+    },
+    [navigation]
+  );
+
+  const DownloadPdf = async () => {
     try {
+      setLoading(true);
       const truplan = await getTruplan("1");
       const { result } = truplan;
-      // const data = fetch(result.blob_url)
+      const response = await fetch(result.blob_url);
+      if (!response.ok) {
+        alert("Can't the get the PDF file \n Contact Admin");
+      }
+      const blob = await response.blob();
       const link = document.createElement("a");
-      link.href = result.blob_url;
-      // document.body.appendChild(result.blob_url);
-      link.download = "example.pdf";
+      const url = URL.createObjectURL(blob);
+      link.href = url;
+      link.download = "ambrastudy.pdf";
       link.click();
-      // document.body.removeChild(result.blob_url);
+      URL.revokeObjectURL(url);
     } catch (err) {
       console.error("Error", err);
+    } finally {
+      setLoading(false);
     }
-  }, []);
+  };
 
   const showPDF = useCallback(async () => {
     try {
+      setLoading(true);
       const truplan = await getTruplan("1");
       window.open(truplan?.result?.blob_url);
     } catch (err) {
       console.error("Error", err);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   return (
     <>
       <Header />
+      {Loading && (
+        <div className="flex h-screen w-full justify-center items-center absolute bg-opacity-70	 bg-white">
+          <Loader />
+        </div>
+      )}
       <div className="flex-1 w-full min-h-screen bg-gray-300 p-12">
         {/* table  */}
         <table className="min-w-full table-auto border-collapse border border-black">
@@ -76,6 +103,7 @@ const HomePage: React.FC = () => {
                   <td className="px-4 py-2  border-gray-200 ">
                     <div className="flex flex-row items-center gap-x-3 justify-center">
                       <button
+                        type="button"
                         onClick={() => {
                           showPDF();
                         }}
@@ -83,6 +111,7 @@ const HomePage: React.FC = () => {
                         <LuEye size={20} />
                       </button>
                       <button
+                        type="button"
                         onClick={() => {
                           navigation("/upload");
                         }}
@@ -90,11 +119,28 @@ const HomePage: React.FC = () => {
                         <FiUpload color="#d400ff" size={20} />
                       </button>
                       <button
+                        type="button"
                         onClick={() => {
                           DownloadPdf();
                         }}
                       >
                         <TbDownload size={20} color="#00ff4c" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          DicomImageViewer("49");
+                        }}
+                      >
+                        <FaImage size={20} color="#00ff4c" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          DownloadPdf();
+                        }}
+                      >
+                        <RiImageAddLine size={20} color="#00ff4c" />
                       </button>
                     </div>
                   </td>

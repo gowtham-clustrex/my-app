@@ -1,10 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@tailwind screens;
 
 .centered {
-    @apply flex h-screen w-full items-center justify-center;
-  }
-
-  
+  @apply flex h-screen w-full items-center justify-center;
+}

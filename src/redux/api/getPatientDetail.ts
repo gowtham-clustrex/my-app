@@ -22,3 +22,12 @@ export const uploadTruPlan = (patientId: number | string) =>
       }
     )
     .then((res) => res.data);
+
+export const getPatientDicom = (case_id: number | string | null) =>
+  axios
+    .get(`${url}/mobile/case-details/${case_id}/anatomy`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    })
+    .then((res) => res.data);

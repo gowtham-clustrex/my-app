@@ -7,6 +7,7 @@ import NewPatientPage from "../pages/NewPatientPage";
 import SchedulePatient from "../pages/SchedulePatient";
 import ViewPatient from "../pages/ViewPatient";
 import Uploadpage from "../pages/Uploadpage";
+import DicomImageList from "../pages/DicomImageList";
 
 const PublicRoutes: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const PublicRoutes: React.FC = () => {
         <Route path="schedule" element={<SchedulePatient />} />
         <Route path="view" element={<ViewPatient />} />
         <Route path="upload" element={<Uploadpage />} />
+        <Route path="dicom" element={<DicomImageList />} />
       </Route>
     </Routes>
   );
