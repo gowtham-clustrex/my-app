@@ -40,7 +40,7 @@ const HomePage: React.FC = () => {
   const DownloadPdf = async () => {
     try {
       setLoading(true);
-      const truplan = await getTruplan("1");
+      const truplan = await getTruplan("49");
       const { result } = truplan;
       const response = await fetch(result.blob_url);
       if (!response.ok) {
@@ -63,7 +63,9 @@ const HomePage: React.FC = () => {
   const showPDF = useCallback(async () => {
     try {
       setLoading(true);
-      const truplan = await getTruplan("1");
+      const truplan = await getTruplan("49");
+      console.log(truplan);
+
       window.open(truplan?.result?.blob_url);
     } catch (err) {
       console.error("Error", err);

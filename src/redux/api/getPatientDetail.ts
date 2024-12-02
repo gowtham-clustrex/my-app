@@ -1,19 +1,20 @@
 import axios from "axios";
 import { url } from "../../constants/config";
+// import { url } from "../const/config";
 
-export const getTruplan = (patientId: number | string) =>
+export const getTruplan = (case_id: number | string) =>
   axios
-    .get(`${url}/mobile/truplan/patients/${patientId}`, {
+    .get(`${url}/mobile/truplan/case-details/${case_id}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
     })
     .then((res) => res.data);
 
-export const uploadTruPlan = (patientId: number | string) =>
+export const uploadTruPlan = (case_id: number | string) =>
   axios
     .post(
-      `${url}/mobile/truplan/patients/${patientId}`,
+      `${url}/mobile/truplan/case-details/${case_id}`,
       {},
       {
         headers: {
